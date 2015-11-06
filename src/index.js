@@ -129,10 +129,10 @@ function injectResultInObject(result, mappedObject, maps, mapId, columnPrefix) {
             let column = (property.column) ? property.column : property.name,
                 columnValue;
 
-            if (property.fn) {
+            if (property.fn && _.isFunction(property.fn)) {
                 columnValue = property.fn(result, columnPrefix);
             } else {
-                columnValue = result[columnPrefix + column];                
+                columnValue = result[columnPrefix + column];
             }
 
             mappedObject[property.name] = columnValue;
@@ -165,9 +165,11 @@ function injectResultInObject(result, mappedObject, maps, mapId, columnPrefix) {
     });
 
     // Copy functions
-    _lodash2['default'].each(resultMap.fns, function(fn) {
-        !_lodash2['default'].isFunction(fn)
+    _['default'].each(resultMap.fns, function(fn) {
+
+        if (!_['default'].isFunction(fn)) {
             return;
+        }
 
         fn(mappedObject, result);
     });
