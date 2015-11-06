@@ -126,9 +126,16 @@ function injectResultInObject(result, mappedObject, maps, mapId, columnPrefix) {
         if (!mappedObject[property.name]) {
 
             // The default for column name is property name
-            let column = (property.column) ? property.column : property.name;
+            let column = (property.column) ? property.column : property.name,
+                columnValue;
 
-            mappedObject[property.name] = result[columnPrefix + column];
+            if (property.fn) {
+                columnValue = property.fn(result, columnPrefix);
+            } else {
+                columnValue = result[columnPrefix + column];                
+            }
+
+            mappedObject[property.name] = columnValue;
         }
     });
 
@@ -155,6 +162,14 @@ function injectResultInObject(result, mappedObject, maps, mapId, columnPrefix) {
         }
 
         injectResultInCollection(result, mappedCollection, maps, collection.mapId, collection.columnPrefix);
+    });
+
+    // Copy functions
+    _lodash2['default'].each(resultMap.fns, function(fn) {
+        !_lodash2['default'].isFunction(fn)
+            return;
+
+        fn(mappedObject, result);
     });
 }
 
