@@ -165,9 +165,9 @@ function injectResultInObject(result, mappedObject, maps, mapId, columnPrefix) {
     });
 
     // Copy functions
-    _['default'].each(resultMap.fns, function(fn) {
+    _.each(resultMap.fns, function(fn) {
 
-        if (!_['default'].isFunction(fn)) {
+        if (!_.isFunction(fn)) {
             return;
         }
 
